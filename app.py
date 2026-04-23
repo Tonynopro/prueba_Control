@@ -34,12 +34,16 @@ def registrar_evento():
     connection = get_connection()
     cursor = connection.cursor()
 
+    fecha_hora = data.get("fecha_hora")
+
     query = """
-        INSERT INTO eventos (tipo)
-        VALUES (%s)
+    INSERT INTO eventos (tipo, fecha_hora)
+    VALUES (%s, %s)
     """
 
-    cursor.execute(query, (tipo,))
+    cursor.execute(query, (tipo, fecha_hora))
+
+
     connection.commit()
 
     cursor.close()
