@@ -98,7 +98,7 @@ def obtener_eventos():
     query = """
     SELECT *
     FROM eventos
-    ORDER BY fecha_hora
+    ORDER BY fecha_hora DESC
     """
 
     cursor.execute(query)
