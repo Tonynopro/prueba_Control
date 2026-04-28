@@ -99,7 +99,6 @@ def obtener_eventos():
     SELECT *
     FROM eventos
     ORDER BY fecha_hora DESC
-    LIMIT 50
     """
 
     cursor.execute(query)
