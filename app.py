@@ -111,6 +111,42 @@ def obtener_eventos():
 
     return jsonify(resultados)
 
+@app.route("/estadisticas", methods=["GET"])
+def obtener_estadisticas():
+
+    connection = get_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    query = """
+    SELECT salon, COUNT(*) as total
+    FROM eventos
+    WHERE tipo = 'entrada'
+    GROUP BY salon
+    """
+
+    cursor.execute(query)
+
+    resultados = cursor.fetchall()
+
+    total_query = """
+    SELECT COUNT(*) as total
+    FROM eventos
+    WHERE tipo = 'entrada'
+    """
+
+    cursor.execute(total_query)
+
+    total = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    return jsonify({
+        "total": total["total"],
+        "salones": resultados
+    })
+
+
 if __name__ == "__main__":
 
     PORT = int(os.environ.get("PORT", 5000))
