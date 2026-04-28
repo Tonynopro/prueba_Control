@@ -25,6 +25,7 @@ def registrar_evento():
     data = request.json
 
     tipo = data.get("tipo")
+    salon = data.get("salon", "Salon 1")
 
     if tipo not in ["entrada", "salida"]:
         return jsonify({
@@ -37,11 +38,11 @@ def registrar_evento():
     fecha_hora = data.get("fecha_hora")
 
     query = """
-    INSERT INTO eventos (tipo, fecha_hora)
-    VALUES (%s, %s)
-    """
+            INSERT INTO eventos (tipo, fecha_hora, salon)
+            VALUES (%s, %s, %s)
+            """
 
-    cursor.execute(query, (tipo, fecha_hora))
+    cursor.execute(query, (tipo, fecha_hora, salon))
 
 
     connection.commit()
@@ -88,6 +89,27 @@ def obtener_aforo():
         "aforo_actual": aforo
     })
 
+@app.route("/eventos", methods=["GET"])
+def obtener_eventos():
+
+    connection = get_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    query = """
+    SELECT *
+    FROM eventos
+    ORDER BY fecha_hora DESC
+    LIMIT 50
+    """
+
+    cursor.execute(query)
+
+    resultados = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return jsonify(resultados)
 
 if __name__ == "__main__":
 
